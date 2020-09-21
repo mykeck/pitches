@@ -48,7 +48,7 @@ class User(UserMixin, db.Model):
         return f'User {self.username}' 
 
 
-class post(db.Model):
+class Post(db.Model):
     __tablename__= "posts"
 
 
@@ -80,5 +80,81 @@ class post(db.Model):
         return Post.query.order_(Post.posted_at.asc()).all()
 
     def __repr__(self):
-        return f"Post('{self.Post_title}', '{self.posted_at}')"                      
+        return f"Post('{self.Post_title}', '{self.posted_at}')"
+
+
+class Upvote(db.Model):
+    __tablename__ = 'upvotes'
+
+    id = db.Column(db.Integer,primary_key=True)
+    user_id = db.Column(db.Integer,db.ForeignKey('users.id'))  
+    post_id = db.Column(db.Integer,db.ForeignKey('posts.id'))  
+
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+    @classmethod
+    def upvote(cls, id):
+        upvote_post = Upvote(user= current_user, post_id =id)
+        upvote_post.save() 
+
+
+    @classmethod
+    def get_upvotes(cls,id):
+        upvote = Upvote.query.filter_by(post_id=id).all()
+        return upvote
+
+    def __repr__(self):
+        return f'{self.user_id}:{self.pitch_id}'
+
+
+class Downvote(db.Model):
+    __tablename__ = 'downvotes'
+
+    id = db.Column(db.Integer,primary_key=True)
+    user_id = db.Column(db.Integer,db.ForeignKey('users.id'))
+    post_id = db.Column(db.Integer,db.ForeignKey('posts.id'))
+    
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+    @classmethod
+    def downvote(cls, id):
+        downvote_post = Downvote(user=current_user, post_id=id)
+        downvote_post.save()
+
+    @classmethod
+    def get_downvotes(cls,id):
+        downvote = Downvote.query.filter_by(post_id=id).all()
+        return downvote
+
+    def __repr__(self):
+        return f'{self.user_id}:{self.pitch_id}'
+
+  
+
+class Comment(db.Model):
+    __tablename__ = 'comments'
+    id = db.Column(db.Integer, primary_key=True)
+    comment = db.Column(db.Text(),nullable = False)
+    user_id = db.Column(db.Integer,db.ForeignKey('users.id'),nullable = False)
+    post_id = db.Column(db.Integer,db.ForeignKey('posts.id'),nullable = False)
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+    @classmethod
+    def get_comments(cls,id):
+        comments = Comment.query.filter_by(post_id=id).all()
+
+        return comments
+
+    
+    def __repr__(self):
+        return f'comment:{self.comment}'                                             
     

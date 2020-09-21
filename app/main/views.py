@@ -1,8 +1,9 @@
 from flask import render_template
 from . import main
-from ..models import User
+from ..models import User,Post,Comment,Upvote,Downvote
 from flask_login import login_required, current_user
-
+from ..import db
+from datetime import datetime
 
 #Views
 @main.route('/')
@@ -12,7 +13,7 @@ def index():
     product_posts = post.query.filter_by(category = 'product').all()
     business_posts = post.query.filter_by(category = 'business').all()
 
-    return render_template('index.html',all_posts = all_posts,pickup_posts =pickup_posts, product_posts = product_posts, business_posts)
+    return render_template('index.html',all_posts = all_posts,pickup_posts =pickup_posts, product_posts = product_posts, business_posts =business_posts)
 
 
 
