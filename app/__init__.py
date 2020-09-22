@@ -12,6 +12,7 @@ login_manager.login_view = 'auth.login'
 db = SQLAlchemy()
 bootstrap = Bootstrap()
 photos = UploadSet('photos',IMAGES)
+mail = Mail()
 
 
 

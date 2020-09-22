@@ -1,0 +1,3 @@
+Hello {{user.username}}
+Welcome to Pitches.
+Feel free to browse through Pitches
