@@ -9,26 +9,27 @@ from datetime import datetime
 #Views
 @main.route('/')
 def index():
-    all_posts = post.query.all()
-    pickup_posts = post.query.filter_by(category = 'pickup_line').all()
-    product_posts = post.query.filter_by(category = 'product').all()
-    business_posts = post.query.filter_by(category = 'business').all()
+    all_posts = Post.query.all()
+    pickup_posts = Post.query.filter_by(category = 'pickup_line').all()
+    product_posts = Post.query.filter_by(category = 'product').all()
+    business_posts = Post.query.filter_by(category = 'business').all()
 
-    return render_template('index.html',all_posts = all_posts,pickup_posts =pickup_posts, product_posts = product_posts, business_posts =business_posts)
+    return render_template('index.html',all_posts = all_posts,pickup_posts = pickup_posts,product_posts = product_posts, business_posts = business_posts )
 
 
 
-@main.route('/user/<uname>/update/pic',methods= [POST]) 
+@main.route('/user/<uname>/update/pic',methods= ['POST']) 
 @login_required
 def update_pic(uname):
-    User = User.query.filter_by(username = uname).first()if 'photo' in request.files:
+    User = User.query.filter_by(username = uname).first()
     if 'photo' in request.files:
         filename = photos.save(request.files['photo'])
         path = f'photos/{filename}'
         user.profile_pic_path = path
         db.session.commit()
 
-    return redirect(url_for('main.profile',uname=uname))    
+    return redirect(url_for('main.profile',uname=uname))   
+
 
 
 
@@ -65,20 +66,7 @@ def update_profile(uname):
 
 
 
-@main.route('/user/<uname>/update/pic',methods= ['POST'])
-@login_required
-def update_pic(uname):
-    user = User.query.filter_by(username = uname).first()
-    if 'photo' in request.files:
-        filename = photos.save(request.files['photo'])
-        path = f'photos/{filename}'
-        user.profile_pic_path = path
-        db.session.commit()
-    return redirect(url_for('main.profile',uname=uname))
-
-
-
- @main.route('/new_post', methods = ['POST','GET'])
+@main.route('/new_post', methods = ['POST','GET'])
 @login_required
 def new_post():
     form = PostForm()

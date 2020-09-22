@@ -1,0 +1,17 @@
+{% extends 'base.html'%}
+{% import 'macros.html' as macro%}
+
+
+{% block content %}
+{% if posts %}
+
+            <div>{{ macro.post_display(posts)}}</div>
+  
+
+<h3> There are no pitches at the moment, make one!</h3>
+
+{% endif %}
+
+
+
+{% endblock %}
